@@ -1,14 +1,18 @@
-import React from 'react'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { TokenBalance } from '@/components/tokens/TokenBalance'
-import { TokenTransfer } from '@/components/tokens/TokenTransfer'
+// src/pages/tokens.tsx
+import React from 'react';
+import { TokenBalance } from '@/src/components/tokens/TokenBalance';
+import { TokenTransfer } from '@/src/components/tokens/TokenTransfer';
+import { TokenPurchase } from '@/src/components/tokens/TokenPurchase';
+import DashboardLayout from '@/src/components/layout/DashboardLayout';
 
 export default function Tokens() {
- return (
-   <div className="container mx-auto p-4 space-y-4">
-     <ConnectButton />
-     <TokenBalance />
-     <TokenTransfer />
-   </div>
- )
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        <TokenBalance />
+        <TokenPurchase />
+        <TokenTransfer />
+      </div>
+    </DashboardLayout>
+  );
 }

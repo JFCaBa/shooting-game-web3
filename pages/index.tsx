@@ -1,12 +1,13 @@
-import React from 'react'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { TokenBalance } from '@/components/tokens/TokenBalance'
+// pages/index.tsx
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  return (
-    <div className="container mx-auto p-4">
-      <ConnectButton />
-      <TokenBalance />
-    </div>
-  )
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/dashboard');
+  }, [router]);
+
+  return null;
 }

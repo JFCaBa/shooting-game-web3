@@ -1,5 +1,5 @@
 import { useContractRead } from 'wagmi';
-import { GAME_TOKEN_ADDRESS, GAME_TOKEN_ABI } from '@/config/web3Config';
+import { GAME_TOKEN_ADDRESS, GAME_TOKEN_ABI } from '@/src/config/web3Config';
 
 export const useTokenBalance = (address?: string) => {
   return useContractRead({

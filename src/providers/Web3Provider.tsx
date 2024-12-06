@@ -3,7 +3,7 @@ import React from 'react';
 import { WagmiProvider, createConfig } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { gameChain } from '@/config/web3Config';
+import { gameChain } from '@/src/config/web3Config';
 import { http } from 'viem';
 
 const config = createConfig({

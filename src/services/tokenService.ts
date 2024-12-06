@@ -1,5 +1,8 @@
-import { GAME_TOKEN_ABI, GAME_TOKEN_ADDRESS } from "@/config/web3Config";
+import { GAME_TOKEN_ABI, GAME_TOKEN_ADDRESS } from "@/src/config/web3Config";
 import { Contract, ethers } from "ethers";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class TokenService {
   private contract: Contract;
