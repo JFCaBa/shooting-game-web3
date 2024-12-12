@@ -1,142 +1,98 @@
-import React from 'react';
-import DashboardLayout from '@/src/components/layout/DashboardLayout';
-import { Card, CardHeader, CardTitle, CardContent } from '@/src/components/ui/card';
-import { Button } from '@/src/components/ui/button';
 import { useAccount } from 'wagmi';
-import { useTokenBalance } from '@/src/hooks/useTokenBalance';
-import { Trophy, Target, Clock, Sword, Award, Coins } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { StatsCard } from '@/src/components/dashboard/StatsCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { Target, Trophy, Swords, Timer } from 'lucide-react';
 
 export default function Dashboard() {
-  const { address } = useAccount();
-  const { data: tokenBalance } = useTokenBalance(address);
+  const { isConnected } = useAccount();
 
   const stats = [
-    {
-      name: 'Total Games',
-      value: '127',
-      icon: Target,
-      description: 'Games played this season'
-    },
-    {
-      name: 'Win Rate',
-      value: '68%',
-      icon: Trophy,
-      description: 'Average win rate'
-    },
-    {
-      name: 'Game Tokens',
-      value: tokenBalance?.toString() || '0',
-      icon: Coins,
-      description: 'Available GAME tokens'
-    },
-    {
-      name: 'Play Time',
-      value: '47h',
-      icon: Clock,
-      description: 'Total time played'
-    },
+    { title: 'Total Score', value: '15,234', icon: <Trophy className="h-4 w-4 text-yellow-500" /> },
+    { title: 'Accuracy', value: '76%', icon: <Target className="h-4 w-4 text-red-500" /> },
+    { title: 'Games Played', value: '142', icon: <Timer className="h-4 w-4 text-blue-500" /> },
+    { title: 'K/D Ratio', value: '2.4', icon: <Swords className="h-4 w-4 text-green-500" /> },
   ];
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Game Dashboard</h1>
-          <Button variant="outline" className="gap-2">
-            <Sword className="h-4 w-4" />
-            Start Game
-          </Button>
-        </div>
+    <div className="container mx-auto px-4 py-8 mt-16">
+      {isConnected ? (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold mb-2">Game Dashboard</h1>
+            <p className="text-muted-foreground">View your game statistics and progress</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat) => (
+              <StatsCard
+                key={stat.title}
+                title={stat.title}
+                value={stat.value}
+                icon={stat.icon}
+              />
+            ))}
+          </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <Card key={stat.name}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {stat.name}
-                  </CardTitle>
-                  <Icon className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {stat.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Games</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((game) => (
+                    <div key={game} className="flex justify-between items-center border-b pb-2">
+                      <div>
+                        <p className="font-medium">Game #{game}</p>
+                        <p className="text-sm text-muted-foreground">2 hours ago</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium text-green-500">Victory</p>
+                        <p className="text-sm text-muted-foreground">15 kills</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Achievements</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  { name: 'Sharpshooter', description: 'Hit 100 perfect shots', time: '2h ago' },
-                  { name: 'Survivor', description: 'Win 5 matches in a row', time: '1d ago' },
-                  { name: 'Team Player', description: 'Assist 50 teammates', time: '2d ago' },
-                ].map((achievement, i) => (
-                  <div key={i} className="flex items-center">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                      <Award className="h-5 w-5 text-primary" />
+            <Card>
+              <CardHeader>
+                <CardTitle>Progression</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium">Level Progress</span>
+                      <span className="text-sm font-medium">75%</span>
                     </div>
-                    <div className="ml-4 space-y-1">
-                      <p className="text-sm font-medium leading-none">{achievement.name}</p>
-                      <p className="text-sm text-muted-foreground">{achievement.description}</p>
-                    </div>
-                    <div className="ml-auto text-sm text-muted-foreground">
-                      {achievement.time}
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: '75%' }}></div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between space-x-4">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Claim Rewards</p>
-                  <p className="text-sm text-muted-foreground">
-                    150 GAME tokens available
-                  </p>
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium">Rank Progress</span>
+                      <span className="text-sm font-medium">60%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-purple-600 h-2 rounded-full" style={{ width: '60%' }}></div>
+                    </div>
+                  </div>
                 </div>
-                <Button>Claim</Button>
-              </div>
-              
-              <div className="flex items-center justify-between space-x-4">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Daily Mission</p>
-                  <p className="text-sm text-muted-foreground">
-                    Win 3 matches (1/3)
-                  </p>
-                </div>
-                <Button variant="outline">View</Button>
-              </div>
-
-              <div className="flex items-center justify-between space-x-4">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Tournament</p>
-                  <p className="text-sm text-muted-foreground">
-                    Starts in 2h 15m
-                  </p>
-                </div>
-                <Button variant="secondary">Register</Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
-    </DashboardLayout>
+      ) : (
+        <div className="text-center p-8 bg-white rounded-lg shadow">
+          <h2 className="text-2xl font-bold mb-4">Connect to Access Dashboard</h2>
+          <p className="mb-6">Please connect your wallet to view your game statistics</p>
+          <ConnectButton />
+        </div>
+      )}
+    </div>
   );
 }
