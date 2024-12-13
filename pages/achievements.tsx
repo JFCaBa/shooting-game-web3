@@ -1,48 +1,23 @@
+// pages/achievements.tsx
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { Trophy, Target, Swords, Medal, Star } from 'lucide-react';
+import { Card, CardContent } from '@/src/components/ui/card';
+import { Trophy, Target, Swords } from 'lucide-react';
+import { useAchievements } from '@/src/hooks/useAchievements';
+import { Achievement } from '@/src/services/achievementService';
+
+const getAchievementIcon = (type: Achievement['type']) => {
+  const icons = {
+    'kills': <Swords className="h-6 w-6 text-green-500" />,
+    'hits': <Target className="h-6 w-6 text-red-500" />,
+    'accuracy': <Trophy className="h-6 w-6 text-yellow-500" />
+  };
+  return icons[type];
+};
 
 export default function Achievements() {
-  const { isConnected } = useAccount();
-
-  const achievements = [
-    {
-      title: "First Victory",
-      description: "Win your first game",
-      icon: <Trophy className="h-6 w-6 text-yellow-500" />,
-      progress: 100,
-      completed: true,
-    },
-    {
-      title: "Sharpshooter",
-      description: "Achieve 80% accuracy in a single game",
-      icon: <Target className="h-6 w-6 text-red-500" />,
-      progress: 75,
-      completed: false,
-    },
-    {
-      title: "Veteran",
-      description: "Play 100 games",
-      icon: <Medal className="h-6 w-6 text-blue-500" />,
-      progress: 42,
-      completed: false,
-    },
-    {
-      title: "Kill Streak",
-      description: "Get 10 kills without dying",
-      icon: <Swords className="h-6 w-6 text-green-500" />,
-      progress: 90,
-      completed: false,
-    },
-    {
-      title: "Legend",
-      description: "Reach the top of the leaderboard",
-      icon: <Star className="h-6 w-6 text-purple-500" />,
-      progress: 20,
-      completed: false,
-    },
-  ];
+  const { isConnected, address } = useAccount();
+  const { data: achievements, isLoading } = useAchievements(address as string);
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
@@ -52,35 +27,38 @@ export default function Achievements() {
             <h1 className="text-2xl font-bold mb-2">Achievements</h1>
             <p className="text-muted-foreground">Track your progress and unlock rewards</p>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {achievements.map((achievement) => (
-              <Card key={achievement.title} className={achievement.completed ? "border-yellow-500" : ""}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="p-3 rounded-full bg-gray-100">
-                      {achievement.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{achievement.title}</h3>
-                      <p className="text-sm text-muted-foreground">{achievement.description}</p>
-                      <div className="mt-2">
-                        <div className="flex justify-between mb-1">
-                          <span className="text-sm font-medium">Progress</span>
-                          <span className="text-sm font-medium">{achievement.progress}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full ${achievement.completed ? 'bg-yellow-500' : 'bg-blue-600'}`}
-                            style={{ width: `${achievement.progress}%` }}
-                          ></div>
+            {isLoading ? (
+              <div>Loading achievements...</div>
+            ) : (
+              achievements?.map((achievement) => (
+                <Card key={achievement._id}>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 rounded-full bg-gray-100">
+                        {getAchievementIcon(achievement.type)}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold capitalize">
+                          {achievement.type} Achievement
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          Reached {achievement.milestone}% {achievement.type}
+                        </p>
+                        <div className="mt-2">
+                          <p className="text-sm text-yellow-600">
+                            Reward: {achievement.reward} tokens
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Unlocked: {new Date(achievement.unlockedAt).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       ) : (

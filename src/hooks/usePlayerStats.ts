@@ -1,12 +1,13 @@
+// src/hooks/usePlayerStats.ts
 import { useQuery } from '@tanstack/react-query';
 import { PlayerService } from '@/src/services/playerService';
 
 const playerService = new PlayerService();
 
-export const useTokenBalance = (playerId: string) => {
+export const usePlayerStats = (playerId: string) => {
   return useQuery({
-    queryKey: ['tokenBalance', playerId],
-    queryFn: () => playerService.getTokenBalance(playerId),
+    queryKey: ['playerStats', playerId],
+    queryFn: () => playerService.getPlayerStats(playerId),
     enabled: !!playerId,
   });
 };
