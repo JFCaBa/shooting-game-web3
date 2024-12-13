@@ -65,7 +65,6 @@ export default function Achievements() {
         <div className="text-center p-8 bg-white rounded-lg shadow">
           <h2 className="text-2xl font-bold mb-4">Connect to View Achievements</h2>
           <p className="mb-6">Connect your wallet to track your achievements</p>
-          <ConnectButton />
         </div>
       )}
     </div>

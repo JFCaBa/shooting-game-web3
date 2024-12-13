@@ -6,7 +6,7 @@ import { useLeaderboard } from '@/src/hooks/useLeaderboard';
 
 export default function Leaderboard() {
   const [category, setCategory] = useState<'kills' | 'hits' | 'drones'>('kills');
-  const { data: players, isLoading } = useLeaderboard(category);
+  const { data: players, isLoading } = useLeaderboard();
 
   const getCategoryIcon = (position: number, category: string) => {
     const icons = {

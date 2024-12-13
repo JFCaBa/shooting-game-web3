@@ -12,12 +12,10 @@ export interface LeaderboardPlayer {
 
   export class LeaderboardService {
     private baseUrl = API_BASE_URL;
-  
-    async getTopPlayers(category: 'kills' | 'hits' | 'drones'): Promise<LeaderboardPlayer[]> {
-      // Map 'drones' category to 'droneHits' in the API URL
-      const apiCategory = category === 'drones' ? 'droneHits' : category;
-      const response = await fetch(`${this.baseUrl}/halloffame/${apiCategory}`);
-      if (!response.ok) throw new Error('Failed to fetch leaderboard');
-      return response.json();
-    }
+
+      async getTopPlayers(): Promise<LeaderboardPlayer[]> {
+        const response = await fetch(`${this.baseUrl}/halloffame/kills`);
+        if (!response.ok) throw new Error('Failed to fetch top players');
+        return response.json();
+      }
   }

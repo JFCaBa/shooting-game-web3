@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { LeaderboardService } from '@/src/services/leaderBoardService';
+import { LeaderboardService } from '@/src/services/leaderboardService';
 
 const leaderboardService = new LeaderboardService();
 
-export const useLeaderboard = (category: 'kills' | 'hits' | 'drones') => {
+export const useLeaderboard = () => {
   return useQuery({
-    queryKey: ['leaderboard', category],
-    queryFn: () => leaderboardService.getTopPlayers(category),
+    queryKey: ['leaderboard'],
+    queryFn: () => leaderboardService.getTopPlayers(),
   });
 };
