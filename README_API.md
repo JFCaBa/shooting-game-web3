@@ -83,16 +83,6 @@
 - **GET** `/achievements/config`
 - **Response**: Configuration for all achievement types and their rewards
 
-#### Track Achievement Progress
-- **POST** `/achievements/track`
-- **Body**:
-```json
-{
-    "playerId": "string",
-    "type": "kills|hits|survivalTime|accuracy",
-    "value": number
-}
-```
 
 ## WebSocket Messages
 
