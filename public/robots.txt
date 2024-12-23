@@ -1,0 +1,25 @@
+# Path: /public/robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://shooting-game.vercel.app/sitemap.xml
+
+# Crawl Delay
+Crawl-delay: 10
+
+# Disallow API routes
+Disallow: /api/*
+
+# Disallow private routes
+Disallow: /tokens
+Disallow: /achievements
+Disallow: /dashboard
+
+# Only Allow Search Engines
+User-agent: Googlebot
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: Yandexbot
+Allow: /
