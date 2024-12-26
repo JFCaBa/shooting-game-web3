@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 const config = getDefaultConfig({
   appName: 'Shooting Game',
-  projectId: 'onedayvpn.com',
+  projectId: 'shootingdapp.com',
   chains: [bscTestnet],
   ssr: true,
 });
