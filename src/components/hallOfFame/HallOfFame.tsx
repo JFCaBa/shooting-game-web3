@@ -46,7 +46,13 @@ export const HallOfFame = () => {
             >
               <div className="flex items-center space-x-4">
                 <span className="font-bold text-lg">#{index + 1}</span>
-                <span>{player.playerId ? player.playerId.slice(-4) : 'Unknown'}</span>
+                <span>
+                  {player.nickName ? 
+                  player.nickName : 
+                  player.playerId ? 
+                  player.playerId.slice(-4) :
+                   'Unknown'}
+                </span>
               </div>
               <span className="font-bold">
                 {currentView === 'kills' ? player.stats.kills : player.stats.hits}

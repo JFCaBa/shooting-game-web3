@@ -1,6 +1,5 @@
 import { bscTestnet } from "wagmi/chains";
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 export const GAME_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS;

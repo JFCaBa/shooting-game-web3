@@ -1,13 +1,13 @@
-// src/hooks/usePlayerStats.ts
 import { useQuery } from '@tanstack/react-query';
-import { PlayerService } from '@/src/services/playerService';
+import { apiService } from '@/src/services/apiService';
+import { useAuth } from '@/src/providers/AuthProvider';
 
-const playerService = new PlayerService();
+export const usePlayerStats = () => {
+  const { isAuthenticated } = useAuth();
 
-export const usePlayerStats = (playerId: string) => {
   return useQuery({
-    queryKey: ['playerStats', playerId],
-    queryFn: () => playerService.getPlayerStats(playerId),
-    enabled: !!playerId,
+    queryKey: ['playerStats'],
+    queryFn: () => apiService.getProfile(),
+    enabled: isAuthenticated
   });
 };

@@ -1,5 +1,6 @@
 // src/services/apiClient.ts
-import { API_BASE_URL } from '@/src/config/constants';
+import { API_BASE_URL } from '@/src/services/apiConfig';
+
 
 export interface PlayerStats {
   id: string;
@@ -48,7 +49,7 @@ class ApiClient {
   private authToken?: string;
 
   constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || API_BASE_URL;
+    this.baseUrl = API_BASE_URL;
   }
 
   setAuthToken(token: string) {
@@ -80,11 +81,11 @@ class ApiClient {
 
   // Player related endpoints
   async getPlayerStats(playerId: string): Promise<PlayerStats> {
-    return this.fetch<PlayerStats>(`/api/v1/players/${playerId}`);
+    return this.fetch<PlayerStats>(`/players/${playerId}`);
   }
 
   async updatePlayerProfile(playerId: string, data: Partial<PlayerStats>): Promise<PlayerStats> {
-    return this.fetch<PlayerStats>(`/api/v1/players/${playerId}`, {
+    return this.fetch<PlayerStats>(`/players/${playerId}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -92,12 +93,12 @@ class ApiClient {
 
   // Achievement related endpoints
   async getAchievements(playerId: string): Promise<Achievement[]> {
-    return this.fetch<Achievement[]>(`/api/v1/players/${playerId}/achievements`);
+    return this.fetch<Achievement[]>(`/players/${playerId}/achievements`);
   }
 
   async claimAchievement(playerId: string, achievementId: string): Promise<Achievement> {
     return this.fetch<Achievement>(
-      `/api/v1/players/${playerId}/achievements/${achievementId}/claim`,
+      `/players/${playerId}/achievements/${achievementId}/claim`,
       { method: 'POST' }
     );
   }

@@ -1,4 +1,3 @@
-// src/providers/Web3Provider.tsx
 import { WagmiProvider, createConfig, useDisconnect } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';

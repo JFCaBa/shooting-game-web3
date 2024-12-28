@@ -1,8 +1,9 @@
-import { API_BASE_URL } from './apiConfig';
+import { API_BASE_URL } from '@/src/services/apiConfig';
 
 export interface PlayerStats {
   _id: string;
   playerId: string;
+  nickName: string;
   stats: {
     hits: number;
     kills: number;

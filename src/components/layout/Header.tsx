@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { LoginButton } from '@/src/components/auth/LoginButton';
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,8 +25,7 @@ export const Header = () => {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
-          <ConnectButton />
-
+          <LoginButton />
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}

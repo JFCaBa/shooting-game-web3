@@ -17,11 +17,6 @@ export default function Leaderboard() {
     return icons[category as keyof typeof icons];
   };
 
-  const formatPlayerName = (playerId: string | null | undefined) => {
-    if (!playerId) return 'Unknown Player';
-    return `...${playerId.slice(-4)}`;
-  };
-
   return (
     <div className="space-y-6 container mx-auto px-4 py-8 mt-16">
       <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:space-y-0">
@@ -83,7 +78,12 @@ export default function Leaderboard() {
                         Rank #{index + 1}
                       </p>
                       <p className="text-xl font-bold">
-                        {formatPlayerName(player.playerId)}
+                      { player.nickName ? 
+                        player.nickName : 
+                        player.playerId ? 
+                        player.playerId.slice(-4) :
+                        'Unknown'
+                      }
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {category === 'kills' ? 
@@ -131,7 +131,12 @@ export default function Leaderboard() {
                           </div>
                         </td>
                         <td className="py-3 px-4 font-medium">
-                          {formatPlayerName(player.playerId)}
+                        { player.nickName ? 
+                          player.nickName : 
+                          player.playerId ? 
+                          player.playerId.slice(-4) :
+                          'Unknown'
+                        }
                         </td>
                         <td className="py-3 px-4">{player.stats?.kills || 0}</td>
                         <td className="py-3 px-4">{player.stats?.hits || 0}</td>
