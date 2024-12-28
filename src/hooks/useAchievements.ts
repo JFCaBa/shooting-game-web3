@@ -1,13 +1,23 @@
-// src/hooks/useAchievements.ts
 import { useQuery } from '@tanstack/react-query';
-import { AchievementService, Achievement } from '@/src/services/achievementService';
+import { useAuth } from '@/src/providers/AuthProvider';
+import { apiService } from '@/src/services/apiService';
 
-const achievementService = new AchievementService();
+export interface Achievement {
+  _id: string;
+  playerId: string;
+  nickName: string;
+  type: 'kills' | 'hits' | 'accuracy';
+  milestone: number;
+  unlockedAt: string;
+  reward: number;
+}
 
-export const useAchievements = (playerId?: string) => {
+export const useAchievements = () => {
+  const { isAuthenticated } = useAuth();
+
   return useQuery<Achievement[]>({
-    queryKey: ['achievements', playerId],
-    queryFn: () => achievementService.getPlayerAchievements(playerId as string),
-    enabled: !!playerId,
+    queryKey: ['playerAchievements'],
+    queryFn: () => apiService.getAchievements(),
+    enabled: isAuthenticated,
   });
 };

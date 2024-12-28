@@ -13,8 +13,8 @@ export interface Achievement {
 export class AchievementService {
   private baseUrl = API_BASE_URL;
 
-  async getPlayerAchievements(playerId: string): Promise<Achievement[]> {
-    const response = await fetch(`${this.baseUrl}/players/${playerId}/achievements`);
+  async getPlayerAchievements(): Promise<Achievement[]> {
+    const response = await fetch(`${this.baseUrl}/players/achievements`);
     if (!response.ok) throw new Error('Failed to fetch achievements');
     return response.json();
   }
