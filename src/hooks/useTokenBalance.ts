@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { PlayerService } from '@/src/services/playerService';
+import { apiService } from '@/src/services/apiService';
+import { useAuth } from '@/src/providers/AuthProvider';
 
-const playerService = new PlayerService();
+export const useTokenBalance = () => {
+  const { isAuthenticated } = useAuth();
 
-export const useTokenBalance = (playerId: string) => {
   return useQuery({
-    queryKey: ['tokenBalance', playerId],
-    queryFn: () => playerService.getTokenBalance(playerId),
-    enabled: !!playerId,
+    queryKey: ['tokenBalance'],
+    queryFn: () => apiService.getBalance(),
+    enabled: isAuthenticated
   });
 };

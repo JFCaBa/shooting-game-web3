@@ -1,6 +1,4 @@
-// pages/achievements.tsx
-import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAuth } from '@/src/providers/AuthProvider';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Trophy, Target, Swords } from 'lucide-react';
 import { useAchievements } from '@/src/hooks/useAchievements';
@@ -16,12 +14,12 @@ const getAchievementIcon = (type: Achievement['type']) => {
 };
 
 export default function Achievements() {
-  const { isConnected, address } = useAccount();
-  const { data: achievements, isLoading } = useAchievements(address as string);
+  const { isAuthenticated } = useAuth();
+  const { data: achievements, isLoading } = useAchievements();
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
-      {isConnected ? (
+      {isAuthenticated ? (
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold mb-2">Achievements</h1>
@@ -64,7 +62,7 @@ export default function Achievements() {
       ) : (
         <div className="text-center p-8 bg-white rounded-lg shadow">
           <h2 className="text-2xl font-bold mb-4">Connect to View Achievements</h2>
-          <p className="mb-6">Connect your wallet to track your achievements</p>
+          <p className="mb-6">Login to your account to track your achievements</p>
         </div>
       )}
     </div>

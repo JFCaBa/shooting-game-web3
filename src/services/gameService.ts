@@ -1,22 +1,18 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { API_BASE_URL } from '@/src/services/apiConfig';
 
 export class GameService {
   async getPlayerStats(playerId: string) {
-    const response = await fetch(`${API_URL}/api/v1/players/${playerId}`);
+    const response = await fetch(`${API_BASE_URL}/players/${playerId}`);
     return response.json();
   }
 
   async getAchievements(playerId: string) {
-    const response = await fetch(`${API_URL}/api/v1/players/${playerId}/achievements`);
+    const response = await fetch(`${API_BASE_URL}/players/${playerId}/achievements`);
     return response.json();
   }
 
   async claimTokens(playerId: string) {
-    const response = await fetch(`${API_URL}/api/v1/players/${playerId}/claim`, {
+    const response = await fetch(`${API_BASE_URL}/players/${playerId}/claim`, {
       method: 'POST',
     });
     return response.json();

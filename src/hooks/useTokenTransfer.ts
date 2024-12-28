@@ -1,22 +1,19 @@
-// src/hooks/useTokenTransfer.ts
-import { useWriteContract, useWatchContractEvent } from 'wagmi';
-import { GAME_TOKEN_ADDRESS, GAME_TOKEN_ABI } from '@/src/config/web3Config';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiService } from '@/src/services/apiService';
 
 export const useTokenTransfer = () => {
-  const { data: hash, isPending, writeContract } = useWriteContract();
+  const queryClient = useQueryClient();
 
-  const transfer = (to: string, amount: string) => {
-    writeContract({
-      address: GAME_TOKEN_ADDRESS,
-      abi: GAME_TOKEN_ABI,
-      functionName: 'transfer',
-      args: [to, amount],
-    });
-  };
+  const { mutate, isPending: isLoading } = useMutation({
+    mutationFn: ({ to, amount }: { to: string; amount: string }) => 
+      apiService.transfer(to, parseInt(amount)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tokenBalance'] });
+    }
+  });
 
-  return { 
-    transfer, 
-    isLoading: isPending,
-    hash 
+  return {
+    transfer: mutate,
+    isLoading
   };
 };
