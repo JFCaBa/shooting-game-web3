@@ -1,14 +1,14 @@
 import { useAuth } from '@/src/providers/AuthProvider';
 import { Card, CardContent } from '@/src/components/ui/card';
-import { Trophy, Target, Swords } from 'lucide-react';
-import { useAchievements } from '@/src/hooks/useAchievements';
-import { Achievement } from '@/src/services/achievementService';
+import { Trophy, Target, Swords, Clock } from 'lucide-react';
+import { Achievement, useAchievements } from '@/src/hooks/useAchievements';
 
 const getAchievementIcon = (type: Achievement['type']) => {
   const icons = {
     'kills': <Swords className="h-6 w-6 text-green-500" />,
     'hits': <Target className="h-6 w-6 text-red-500" />,
-    'accuracy': <Trophy className="h-6 w-6 text-yellow-500" />
+    'accuracy': <Trophy className="h-6 w-6 text-yellow-500" />,
+    'survivalTime': <Clock className="h-6 w-6 text-orange-500" />
   };
   return icons[type];
 };

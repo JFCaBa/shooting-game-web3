@@ -35,5 +35,10 @@ export const apiService = {
   async getTransactions() {
     const response = await api.get('/players/transactions');
     return response.data;
-  }
+  },
+
+  async getAchievements() {
+    const response = await api.get('/players/achievements');
+    return response.data;
+  },
 };

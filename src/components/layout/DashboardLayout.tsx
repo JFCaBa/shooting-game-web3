@@ -1,8 +1,5 @@
-// src/components/layout/DashboardLayout.tsx
 import React from 'react';
-import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Layout } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/src/providers/AuthProvider'
 

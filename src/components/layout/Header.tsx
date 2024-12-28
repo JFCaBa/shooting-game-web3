@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { LoginButton } from '@/src/components/auth/LoginButton';
+import { useAuth } from '@/src/providers/AuthProvider'
+
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth()
 
   return (
     <header className="bg-[#1c1c24] text-white sticky top-0 z-50">
@@ -25,7 +28,9 @@ export const Header = () => {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
-          <LoginButton />
+          {!isAuthenticated && (
+            <LoginButton />
+          )}
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -48,7 +53,7 @@ export const Header = () => {
         <div className="md:hidden bg-[#1c1c24] text-white border-t border-gray-700">
           <ul className="flex flex-col gap-2 px-4 py-2">
             <li>
-              <Link href="/" className="block text-gray-300 hover:text-white" onClick={() => setMenuOpen(false)}>
+              <Link href="/dashboard" className="block text-gray-300 hover:text-white" onClick={() => setMenuOpen(false)}>
                 Dashboard
               </Link>
             </li>
