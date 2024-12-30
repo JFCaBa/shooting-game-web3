@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/src/services/apiConfig';
+import { API_BASE_URL } from '@/src/config/apiConfig';
 import axios from 'axios';
 const Cookies = require('js-cookie');
 

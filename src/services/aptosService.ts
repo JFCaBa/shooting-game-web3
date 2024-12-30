@@ -13,8 +13,16 @@ export class AptosService {
       const privateKeyBytes = Uint8Array.from(
         privateKey.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))
       );
-      const privateKeyObject = new Ed25519PrivateKey(privateKeyBytes); // Correct type for privateKey
+      const privateKeyObject = new Ed25519PrivateKey(privateKeyBytes);
       this.account = Account.fromPrivateKey({ privateKey: privateKeyObject });
+  
+      // Fund the account if it doesn't exist
+      try {
+        await this.requestAirdrop(1000);
+      } catch (airdropError) {
+        console.warn("Airdrop failed or account already funded:", airdropError);
+      }
+  
       return this.account;
     } catch (error) {
       console.error("Error initializing account:", error);
@@ -71,19 +79,20 @@ export class AptosService {
 
   async requestAirdrop(amount: number = 1000): Promise<void> {
     if (!this.account) throw new Error("Account not initialized");
+  
+    const accountAddress = this.account.accountAddress.toString();
 
-    try {
-      const transaction = await this.aptos.fundAccount({
-        accountAddress: this.account.accountAddress.toString(),
-        amount,
-      });
+    const transaction = await this.aptos.fundAccount({
+      accountAddress: accountAddress,
+      amount: amount,
+    });
+    
+    console.log(`Airdrop transaction hash: ${transaction.hash}`);
 
-      await this.aptos.waitForTransaction({
-        transactionHash: transaction.hash,
-      });
-    } catch (error) {
-      console.error("Error requesting airdrop:", error);
-      throw new Error("Airdrop request failed.");
-    }
+    const executedTransaction = await this.aptos.waitForTransaction({
+      transactionHash: transaction.hash,
+    });
+  
+    console.log("Airdrop executed:", executedTransaction);
   }
 }

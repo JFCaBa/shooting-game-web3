@@ -16,7 +16,7 @@ export const AptosWallet = () => {
           const account = aptosService.getAccount();
           if (account) {
             const address = account.accountAddress.toString(); // Use accountAddress
-            const accountBalance = await aptosService.getBalance(address);
+            const accountBalance = await aptosService.getBalance("0xe20b6e8416bd4208211a5bf28e32582116b682c385a7651bbf617fc5723a62d");
             setBalance(accountBalance);
           }
         } catch (err) {

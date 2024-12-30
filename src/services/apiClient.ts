@@ -1,5 +1,5 @@
 // src/services/apiClient.ts
-import { API_BASE_URL } from '@/src/services/apiConfig';
+import { API_BASE_URL } from '@/src/config/apiConfig';
 
 
 export interface PlayerStats {

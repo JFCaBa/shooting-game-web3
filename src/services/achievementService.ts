@@ -1,5 +1,5 @@
 // src/services/achievementService.ts
-import { API_BASE_URL } from './apiConfig';
+import { API_BASE_URL } from '../config/apiConfig';
 
 export interface Achievement {
   _id: string;

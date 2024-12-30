@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/src/services/apiConfig';
+import { API_BASE_URL } from '@/src/config/apiConfig';
 
 export class GameService {
   async getPlayerStats(playerId: string) {
