@@ -5,28 +5,36 @@ export class AptosService {
   private account: Account | null = null;
 
   constructor() {
-    this.aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
+    const config = new AptosConfig({ network: Network.TESTNET });
+    this.aptos = new Aptos(config);
   }
 
-  async initializeAccount(privateKey: string): Promise<Account> {
+  async connectWithPrivateKey(privateKey: string): Promise<void> {
     try {
-      const privateKeyBytes = Uint8Array.from(
-        privateKey.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))
-      );
-      const privateKeyObject = new Ed25519PrivateKey(privateKeyBytes);
-      this.account = Account.fromPrivateKey({ privateKey: privateKeyObject });
-  
-      // Fund the account if it doesn't exist
-      try {
-        await this.requestAirdrop(1000);
-      } catch (airdropError) {
-        console.warn("Airdrop failed or account already funded:", airdropError);
+      // Clean and validate the private key
+      const cleanKey = privateKey.startsWith('0x') ? privateKey.slice(2) : privateKey;
+      
+      if (!/^[0-9a-fA-F]{64}$/.test(cleanKey)) {
+        throw new Error("Invalid private key format");
       }
-  
-      return this.account;
+
+      // Create private key bytes
+      const privateKeyBytes = new Uint8Array(Buffer.from(cleanKey, 'hex'));
+      const privateKeyObject = new Ed25519PrivateKey(privateKeyBytes);
+      
+      // Create account from private key
+      this.account = Account.fromPrivateKey({ privateKey: privateKeyObject });
+      
+      // Log the address
+      const address = this.account.accountAddress.toString();
+      console.log("Connected with address:", address);
+
+      // No need to verify resources immediately - will be checked when needed
+      return;
     } catch (error) {
-      console.error("Error initializing account:", error);
-      throw new Error("Failed to initialize account.");
+      console.error("Error in connectWithPrivateKey:", error);
+      this.account = null;
+      throw error;
     }
   }
 
@@ -36,20 +44,30 @@ export class AptosService {
 
   async getBalance(address: string): Promise<string> {
     try {
-      const resources = await this.aptos.account.getAccountResources({ accountAddress: address });
-      const coinResource = resources.find((resource) =>
-        resource.type.includes("0x1::coin::CoinStore")
+      console.log("Fetching balance for address:", address);
+      const resources = await this.aptos.account.getAccountResources({ 
+        accountAddress: address 
+      });
+
+      const coinResource = resources.find((r) => 
+        r.type === "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>"
       ) as { data: { coin: { value: string } } } | undefined;
-      return coinResource?.data.coin.value || "0";
-    } catch (error) {
-      console.error("Error fetching balance:", error);
-      throw new Error("Failed to fetch balance.");
+
+      const balance = coinResource?.data.coin.value || "0";
+      console.log("Balance fetched:", balance);
+      return balance;
+    } catch (error: any) {
+      console.error("Error in getBalance:", error);
+      if (error.response?.data?.error_code === "account_not_found") {
+        return "0";
+      }
+      throw error;
     }
   }
 
   async transfer(to: string, amount: string): Promise<void> {
     if (!this.account) throw new Error("Account not initialized");
-
+    
     try {
       const transaction = await this.aptos.transaction.build.simple({
         sender: this.account.accountAddress.toString(),
@@ -73,26 +91,7 @@ export class AptosService {
       await this.aptos.waitForTransaction({ transactionHash: committedTxn.hash });
     } catch (error) {
       console.error("Error during transfer:", error);
-      throw new Error("Transfer failed.");
+      throw error;
     }
-  }
-
-  async requestAirdrop(amount: number = 1000): Promise<void> {
-    if (!this.account) throw new Error("Account not initialized");
-  
-    const accountAddress = this.account.accountAddress.toString();
-
-    const transaction = await this.aptos.fundAccount({
-      accountAddress: accountAddress,
-      amount: amount,
-    });
-    
-    console.log(`Airdrop transaction hash: ${transaction.hash}`);
-
-    const executedTransaction = await this.aptos.waitForTransaction({
-      transactionHash: transaction.hash,
-    });
-  
-    console.log("Airdrop executed:", executedTransaction);
   }
 }

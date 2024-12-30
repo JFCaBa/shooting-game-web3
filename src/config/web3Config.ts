@@ -1,25 +1,22 @@
-import { bscTestnet } from "wagmi/chains";
-import dotenv from 'dotenv';
-dotenv.config();
+import { Web3Auth } from "@web3auth/modal";
+import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
 
-export const GAME_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS;
-export const OWNER_ADDRESS = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
+const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID as string;
 
-export const GAME_TOKEN_ABI = [
-  {
-    type: 'function',
-    name: 'balanceOf',
-    stateMutability: 'view',
-    inputs: [{ name: 'account', type: 'address' }],
-    outputs: [{ type: 'uint256' }],
+if (!clientId) {
+  throw new Error("WEB3AUTH_CLIENT_ID is required");
+}
+
+export const web3auth = new Web3Auth({
+  clientId,
+  chainConfig: {
+    chainNamespace: CHAIN_NAMESPACES.OTHER,
+    chainId: "0x1", // Testnet chainId
+    rpcTarget: "https://fullnode.testnet.aptoslabs.com/v1",
+    displayName: "Aptos Testnet",
+    blockExplorer: "https://explorer.aptoslabs.com/testnet",
+    ticker: "APT",
+    tickerName: "Aptos",
   },
-  {
-    type: 'function',
-    name: 'totalSupply',
-    stateMutability: 'view',
-    inputs: [],
-    outputs: [{ name: 'supply', type: 'uint256' }],
-  },
-];
-
-export const gameChain = bscTestnet;
+  web3AuthNetwork: WEB3AUTH_NETWORK.TESTNET,
+});
